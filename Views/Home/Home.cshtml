@@ -1,0 +1,57 @@
+﻿@model List<Urunler>;
+
+<style>
+    img {
+        width: 50%;
+        height: 50%;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3 mx-2">
+                    <div class="form-group text-center">
+                        <img src="@item.Resim" alt="Resim Bulunamadı" />
+                    </div>
+                    <h6 class="text-primary" style="font-weight:500">@item.UrunAdi</h6>
+                    <h6 class="text-danger" style="font-weight:500">₺@item.BirimFiyati.ToString("#,##0.00")</h6>
+                    <div class="form-group text-center mt-2">
+                        <button type="button" class="btn btn-primary btn-block">Sepete Ekle</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ürün Adı</th>
+                    <th>Adet</th>
+                    <th>Birim Fiyat</th>
+                    <th>Toplam Fiyat</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Domates</td>
+                    <td>3</td>
+                    <td>10</td>
+                    <td>30</td>
+                    <td>
+                        <button class="btn btn-danger">Sil</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <label class="form-control">Toplam Tutar</label>
+        <button class="btn btn-warning mt-2 btn-block">Ödeme Yap</button>
+    </div>
+</div>
