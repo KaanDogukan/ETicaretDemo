@@ -1,4 +1,16 @@
-﻿@model List<Urunler>;
+﻿@using ETicaretDemo.Dto;
+@model HomeDto;
+
+@{
+    var urunler = TempData["urunler"];
+    int id = 0;
+    decimal toplam = 0;
+    foreach (var item in Model.Sepetim)
+    {
+        toplam = item.ToplamTutar + toplam;
+    }
+}
+
 
 <style>
     img {
@@ -11,18 +23,22 @@
 <div class="row">
     <div class="col-md-8">
         <div class="row">
-            @foreach (var item in Model)
+            @foreach (var item in Model.Urunlerim)
             {
-                <div class="col-md-3 mx-2">
-                    <div class="form-group text-center">
-                        <img src="@item.Resim" alt="Resim Bulunamadı" />
+                <form action="/Home/SepeteEkle" method="post">
+                    <div class="col-md-2">
+                        <input hidden="hidden" name="id" value="@item.Id" />
+                        <div class="form-group text-center">
+                            <img src="@item.Resim" alt="Resim Bulunamadı" />
+                        </div>
+                        <h6 class="text-primary" style="font-weight:500">@item.UrunAdi</h6>
+                        <h6 class="text-danger" style="font-weight:500">₺@item.BirimFiyati.ToString("#,##0.00")</h6>
+                        <input class="form-control" type="number" name="Adet" value="1" />
+                        <div class="form-group text-center mt-2">
+                            <button type="submit" class="btn btn-primary btn-block">Sepete Ekle</button>
+                        </div>
                     </div>
-                    <h6 class="text-primary" style="font-weight:500">@item.UrunAdi</h6>
-                    <h6 class="text-danger" style="font-weight:500">₺@item.BirimFiyati.ToString("#,##0.00")</h6>
-                    <div class="form-group text-center mt-2">
-                        <button type="button" class="btn btn-primary btn-block">Sepete Ekle</button>
-                    </div>
-                </div>
+                </form>
             }
         </div>
     </div>
@@ -39,19 +55,29 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Domates</td>
-                    <td>3</td>
-                    <td>10</td>
-                    <td>30</td>
-                    <td>
-                        <button class="btn btn-danger">Sil</button>
-                    </td>
-                </tr>
+                @foreach (var item in Model.Sepetim)
+                {
+                    id++;
+                    <tr>
+                        <td>@id</td>
+                        <td>@item.UrunAdi</td>
+                        <td>@item.Adet</td>
+                        <td>₺@item.BirimFiyati.ToString("#,##0.00")</td>
+                        <td>₺@item.ToplamTutar.ToString("#,##0.00")</td>
+                        <td>
+                            <form action="/Home/SepetUrunuSil" method="post">
+                                <input hidden="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-danger">Sil</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
-        <label class="form-control">Toplam Tutar</label>
-        <button class="btn btn-warning mt-2 btn-block">Ödeme Yap</button>
+        <label class="form-control">Toplam Tutar : ₺@toplam.ToString("#,##0.00")</label>
+        <p class="text-danger">@TempData["odeme"]</p>
+        <form action="/Home/OdemeYap" method="post">
+            <button class="btn btn-warning mt-2 btn-block">Ödeme Yap</button>
+        </form>
     </div>
 </div>
